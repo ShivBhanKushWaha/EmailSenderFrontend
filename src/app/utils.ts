@@ -1,0 +1,1 @@
+export const BASE_URL = "https://emailsenderbackend-t2h6.onrender.com"

@@ -1,6 +1,7 @@
 'use client';
 import axios from 'axios';
 import { useState } from 'react';
+import { BASE_URL } from './utils';
 
 export default function EmailSender() {
   const [fromEmail, setFromEmail] = useState('');
@@ -22,7 +23,7 @@ export default function EmailSender() {
 
   try {
     setLoading(true);
-    const res = await axios.post('http://localhost:5000/send-email', formData);
+    const res = await axios.post(`${BASE_URL}/send-email`, formData);
 
     const result = await res.data;
     alert(result.message);
