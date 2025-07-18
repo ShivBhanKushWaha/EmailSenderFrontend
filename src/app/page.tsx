@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { BASE_URL } from './utils';
+import toast from 'react-hot-toast';
 
 export default function EmailSender() {
   const [fromEmail, setFromEmail] = useState('');
@@ -11,33 +12,33 @@ export default function EmailSender() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const formData = new FormData();
-  formData.append('from', fromEmail);
-  formData.append('to', toEmail);
-  formData.append('subject', subject);
-  formData.append('message', message);
-  if (file) formData.append('file', file);
+    const formData = new FormData();
+    formData.append('from', fromEmail);
+    formData.append('to', toEmail);
+    formData.append('subject', subject);
+    formData.append('message', message);
+    if (file) formData.append('file', file);
 
-  try {
-    setLoading(true);
-    const res = await axios.post(`${BASE_URL}/send-email`, formData);
+    try {
+      setLoading(true);
+      const res = await axios.post(`${BASE_URL}/send-email`, formData);
 
-    const result = await res.data;
-    alert(result.message);
+      const result = await res.data;
+      toast.success(result.message)
 
-    if (result) {
-      setToEmail(''); // ✅ Reset only the "To" field
+      if (result) {
+        setToEmail(''); // ✅ Reset only the "To" field
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to send email.');
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error(err);
-    alert('Failed to send email.');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   return (
